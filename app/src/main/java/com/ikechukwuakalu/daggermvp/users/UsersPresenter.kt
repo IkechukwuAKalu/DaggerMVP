@@ -13,7 +13,6 @@ class UsersPresenter @Inject constructor (var usersRepo: UsersRepository) : User
 
     override fun attach(view: UsersContract.View) {
         this@UsersPresenter.view = view
-        loadUsers(null)
     }
 
     override fun detach() {

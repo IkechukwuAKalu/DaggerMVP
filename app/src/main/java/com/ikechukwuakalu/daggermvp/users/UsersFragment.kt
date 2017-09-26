@@ -30,6 +30,7 @@ class UsersFragment @Inject constructor() : DaggerFragment(), UsersContract.View
         setHasOptionsMenu(true)
         usersRV.layoutManager = LinearLayoutManager(context)
         presenter.attach(this)
+        presenter.loadUsers(null)
     }
 
     override fun onDestroy() {

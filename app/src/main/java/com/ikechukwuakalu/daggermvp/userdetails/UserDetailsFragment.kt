@@ -1,5 +1,7 @@
 package com.ikechukwuakalu.daggermvp.userdetails
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,24 +36,29 @@ class UserDetailsFragment @Inject constructor(): DaggerFragment(), UserDetailsCo
     }
 
     override fun showLoading() {
-        detailsProgress.visibility = View.VISIBLE
+        detailsProgressBar.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        detailsProgress.visibility = View.GONE
+        detailsProgressBar.visibility = View.GONE
     }
 
     override fun setTitle(title: String) {
-        setTitle(title)
+        activity.title = title
     }
 
     override fun showUserDetails(user: User?) {
-        detailsName.text = user?.name
-        detailsLocation.text = user?.location
-        detailsBio.text = user?.bio
-        detailsPublicRepos.text = user?.public_repos
+        detailsName.text = "Name: ${user?.name}"
+        detailsLocation.text = "Location: ${user?.location}"
+        detailsBio.text = "Bio: ${user?.bio}"
+        detailsPublicRepos.text = "No of Public Repos: ${user?.public_repos}"
         with(detailsImage) {
             Picasso.with(context).load(user?.avatar_url).into(this)
+        }
+        openBrowserButton.visibility = View.VISIBLE
+        openBrowserButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/${user?.login}"))
+            startActivity(intent)
         }
     }
 
