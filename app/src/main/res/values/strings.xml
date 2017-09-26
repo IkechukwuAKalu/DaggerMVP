@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DaggerMVP</string>
+    <string name="change_city">Change City</string>
+</resources>
