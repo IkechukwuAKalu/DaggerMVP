@@ -1,7 +1,7 @@
 # DaggerMVP
 A sample project to demonstrate the use of the Dagger-Android Module together with the MVP architectural pattern.
 
-This was done to help me learn the implentation of Dagger-Android + MVP + Kotlin. It uses the [Github API](https://api.github.com/search/users?q=location:lagos) to fetch users in a city and goes ahead to fetch user specific details.
+This was done to help me learn the implementation of Dagger-Android + MVP + Kotlin. It uses the [Github API](https://api.github.com/search/users?q=location:lagos) to fetch users in a city and goes ahead to fetch user specific details.
 
 Some screenshots are below
 ![](https://github.com/IkechukwuAKalu/DaggerMVP/blob/master/screenshots/device-2017-09-26-171101.png "Lagos Devs")
