@@ -4,6 +4,7 @@ import android.app.Application
 import com.ikechukwuakalu.daggermvp.BaseApplication
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.data.UsersRepositoryModule
+import com.ikechukwuakalu.daggermvp.utils.rx.RxModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -12,7 +13,7 @@ import dagger.android.support.DaggerApplication
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(UsersRepositoryModule::class, ApplicationModule::class,
+@Component(modules = arrayOf(UsersRepositoryModule::class, RxModule::class, ApplicationModule::class,
         ActivityBindingModule::class, AndroidSupportInjectionModule::class))
 
 interface AppComponent : AndroidInjector<DaggerApplication> {

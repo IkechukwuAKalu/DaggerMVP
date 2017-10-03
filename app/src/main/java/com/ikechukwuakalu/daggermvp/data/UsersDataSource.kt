@@ -1,22 +1,13 @@
 package com.ikechukwuakalu.daggermvp.data
 
+import com.ikechukwuakalu.daggermvp.data.models.Api
 import com.ikechukwuakalu.daggermvp.data.models.User
+import io.reactivex.Observable
 
 interface UsersDataSource {
 
-    fun getUsers(city: String, callback: LoadUsersCallback)
+    fun getUsers(city: String) : Observable<Api>
 
-    fun getUser(login: String, callback: FetchUserCallback)
+    fun getUser(login: String) : Observable<User>
 
-    interface LoadUsersCallback{
-        fun onSuccess(users: List<User>)
-
-        fun onFailure(t: Throwable)
-    }
-
-    interface FetchUserCallback{
-        fun onSuccess(user: User?)
-
-        fun onFailure(t: Throwable)
-    }
 }

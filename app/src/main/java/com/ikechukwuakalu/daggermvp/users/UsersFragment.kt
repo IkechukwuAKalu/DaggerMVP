@@ -10,8 +10,8 @@ import android.widget.LinearLayout
 import com.ikechukwuakalu.daggermvp.R
 import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
-import com.ikechukwuakalu.daggermvp.makeToast
 import com.ikechukwuakalu.daggermvp.userdetails.UsersDetailsActivity
+import com.ikechukwuakalu.daggermvp.utils.makeToast
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.users_list_frag.*
 import javax.inject.Inject
@@ -95,6 +95,7 @@ class UsersFragment @Inject constructor() : DaggerFragment(), UsersContract.View
                 LinearLayout.LayoutParams.MATCH_PARENT
         )
         cityBox.layoutParams = layoutParams
+        cityBox.requestFocus()
         alertDialog.setView(cityBox)
         alertDialog.setPositiveButton("Change") { p0, p1 ->
             val city : String? = cityBox.text.trim().toString()

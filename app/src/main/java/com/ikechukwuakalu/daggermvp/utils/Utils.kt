@@ -1,9 +1,10 @@
-package com.ikechukwuakalu.daggermvp
+package com.ikechukwuakalu.daggermvp.utils
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val TAG = "AppClass"
@@ -28,6 +29,7 @@ fun <T> createService(serviceClass: Class<T>) : T{
     val service = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://api.github.com/")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     return service.create(serviceClass)
 }

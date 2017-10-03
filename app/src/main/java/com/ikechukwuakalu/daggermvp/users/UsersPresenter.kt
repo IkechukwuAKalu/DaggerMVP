@@ -1,13 +1,17 @@
 package com.ikechukwuakalu.daggermvp.users
 
-import com.ikechukwuakalu.daggermvp.data.UsersDataSource
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
+import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.RxScheduler
+import com.ikechukwuakalu.daggermvp.utils.warn
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @ActivityScoped
-class UsersPresenter @Inject constructor (var usersRepo: UsersRepository) : UsersContract.Presenter{
+class UsersPresenter @Inject constructor (private var usersRepo: UsersRepository, private var compositeDisposable: CompositeDisposable,
+                                          private var rxScheduler: RxScheduler) : UsersContract.Presenter{
 
     private var view : UsersContract.View? = null
 
@@ -17,35 +21,46 @@ class UsersPresenter @Inject constructor (var usersRepo: UsersRepository) : User
 
     override fun detach() {
         view = null
+        compositeDisposable.clear()
     }
 
     override fun loadUsers(city: String?) {
         val location = city?.capitalize() ?: "Lagos"
         view?.hideUsers()
         view?.showLoading()
-        usersRepo.getUsers(location, object : UsersDataSource.LoadUsersCallback{
-            override fun onSuccess(users: List<User>) {
-                var newUsers = emptyList<User>()
-                if (location == "Lagos") {
-                    newUsers += listOf(sponsoredUser())
-                }
-                newUsers += users
-                view?.hideLoading()
-                view?.showUsers(newUsers)
-                view?.setTitle("Github Devs in $location")
-            }
 
-            override fun onFailure(t: Throwable) {
-                view?.hideLoading()
-                view?.showErrorLoadingUsers(t.message)
-            }
-        })
+        var newUsers = emptyList<User>()
+        if (location == "Lagos") {
+            newUsers += listOf(sponsoredUser())
+        }
+
+        val disposable : Disposable = usersRepo.getUsers(location)
+                .subscribeOn(rxScheduler.io())
+                .observeOn(rxScheduler.ui())
+                .subscribe({
+                    // onNext()
+                    val users : List<User> = it.items.toList()
+                    newUsers += users
+                    view?.hideLoading()
+                    view?.showUsers(newUsers)
+                    view?.setTitle("Github Devs in $location")
+                }, {
+                    // onError()
+                    view?.hideLoading()
+                    view?.showErrorLoadingUsers(it.message.toString())
+                    warn(it.message.toString())
+                })
+        compositeDisposable.clear()
+        compositeDisposable.add(disposable)
     }
 
     override fun openUserDetails(login: String) {
         view?.showUserDetails(login)
     }
 
+    /**
+     * This is me :-)
+     */
     private fun sponsoredUser() : User {
         return User(id = 25153373, login = "IkechukwuAKalu", avatar_url = "https://avatars2.githubusercontent.com/u/25153373?v=4",
                 name = "Ikechukwu A. Kalu", url = "https://api.github.com/users/IkechukwuAKalu")

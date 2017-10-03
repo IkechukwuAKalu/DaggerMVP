@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.ikechukwuakalu.daggermvp"
         minSdkVersion 15
@@ -56,13 +56,10 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-moshi:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
 
     // Picasso Image Loader
     compile "com.squareup.picasso:picasso:$rootProject.ext.picassoVersion"
-
-    // RxJava
-    compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
-    compile "io.reactivex:rxandroid:$rootProject.ext.rxAndroidVersion"
 
     // Dagger dependencies
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"

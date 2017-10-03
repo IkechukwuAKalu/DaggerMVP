@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.ikechukwuakalu.daggermvp.R
 import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
-import com.ikechukwuakalu.daggermvp.makeToast
+import com.ikechukwuakalu.daggermvp.utils.makeToast
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.user_details_frag.*

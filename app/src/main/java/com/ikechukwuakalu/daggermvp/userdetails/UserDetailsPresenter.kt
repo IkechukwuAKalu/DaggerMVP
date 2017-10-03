@@ -1,14 +1,15 @@
 package com.ikechukwuakalu.daggermvp.userdetails
 
-import com.ikechukwuakalu.daggermvp.data.UsersDataSource
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
-import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
+import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.RxScheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @ActivityScoped
-class UserDetailsPresenter @Inject constructor(var usersRepository: UsersRepository, @UserLogin var login: String)
-    : UserDetailsContract.Presenter {
+class UserDetailsPresenter @Inject constructor(private var usersRepository: UsersRepository, private var compositeDisposable: CompositeDisposable,
+                                               private var rxScheduler: RxScheduler, @UserLogin private var login: String) : UserDetailsContract.Presenter {
 
     var detailsView: UserDetailsContract.View? = null
 
@@ -18,25 +19,30 @@ class UserDetailsPresenter @Inject constructor(var usersRepository: UsersReposit
 
     override fun detach() {
         detailsView = null
+        compositeDisposable.clear()
     }
 
     override fun fetchUserDetails() {
         detailsView?.showLoading()
-        usersRepository.getUser(login, object : UsersDataSource.FetchUserCallback{
-            override fun onSuccess(user: User?) {
-                detailsView?.hideLoading()
-                if (user == null) {
-                    detailsView?.showErrorLoadingUser("User not found")
-                } else {
-                    detailsView?.setTitle(user.login)
-                    detailsView?.showUserDetails(user)
-                }
-            }
 
-            override fun onFailure(t: Throwable) {
-                detailsView?.hideLoading()
-                detailsView?.showErrorLoadingUser(t.message.toString())
-            }
-        })
+        val disposable : Disposable = usersRepository.getUser(login)
+                .subscribeOn(rxScheduler.io())
+                .observeOn(rxScheduler.ui())
+                .subscribe({
+                    // onNext()
+                    detailsView?.hideLoading()
+                    if (it == null) {
+                        detailsView?.showErrorLoadingUser("User not found")
+                    } else {
+                        detailsView?.setTitle(it.login)
+                        detailsView?.showUserDetails(it)
+                    }
+                }, {
+                    // onError()
+                    detailsView?.hideLoading()
+                    detailsView?.showErrorLoadingUser(it.message.toString())
+                })
+        compositeDisposable.clear()
+        compositeDisposable.add(disposable)
     }
 }
