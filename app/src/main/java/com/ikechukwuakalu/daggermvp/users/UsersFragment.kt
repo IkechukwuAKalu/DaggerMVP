@@ -33,8 +33,8 @@ class UsersFragment @Inject constructor() : DaggerFragment(), UsersContract.View
         presenter.loadUsers(null)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         presenter.detach()
     }
 

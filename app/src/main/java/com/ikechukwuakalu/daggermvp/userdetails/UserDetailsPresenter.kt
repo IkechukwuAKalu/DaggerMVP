@@ -2,16 +2,18 @@ package com.ikechukwuakalu.daggermvp.userdetails
 
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
-import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.RxScheduler
+import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.BaseScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @ActivityScoped
-class UserDetailsPresenter @Inject constructor(private var usersRepository: UsersRepository, private var compositeDisposable: CompositeDisposable,
-                                               private var rxScheduler: RxScheduler, @UserLogin private var login: String) : UserDetailsContract.Presenter {
+class UserDetailsPresenter @Inject constructor(private var usersRepository: UsersRepository, private var rxScheduler: BaseScheduler,
+                                               @UserLogin private var login: String) : UserDetailsContract.Presenter {
 
     var detailsView: UserDetailsContract.View? = null
+
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun attach(view: UserDetailsContract.View) {
         detailsView = view

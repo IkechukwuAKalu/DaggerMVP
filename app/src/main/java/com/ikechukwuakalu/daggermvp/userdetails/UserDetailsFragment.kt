@@ -30,8 +30,8 @@ class UserDetailsFragment @Inject constructor(): DaggerFragment(), UserDetailsCo
         presenter.fetchUserDetails()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         presenter.detach()
     }
 
