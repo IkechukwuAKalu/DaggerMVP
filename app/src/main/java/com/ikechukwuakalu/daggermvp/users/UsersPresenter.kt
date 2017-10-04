@@ -4,7 +4,6 @@ import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
 import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.RxScheduler
-import com.ikechukwuakalu.daggermvp.utils.warn
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -48,7 +47,6 @@ class UsersPresenter @Inject constructor (private var usersRepo: UsersRepository
                     // onError()
                     view?.hideLoading()
                     view?.showErrorLoadingUsers(it.message.toString())
-                    warn(it.message.toString())
                 })
         compositeDisposable.clear()
         compositeDisposable.add(disposable)
