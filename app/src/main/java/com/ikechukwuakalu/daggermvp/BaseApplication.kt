@@ -1,15 +1,15 @@
 package com.ikechukwuakalu.daggermvp
 
-import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.di.DaggerAppComponent
+import com.squareup.leakcanary.LeakCanary
+import com.squareup.leakcanary.RefWatcher
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
-import javax.inject.Inject
 
 class BaseApplication: DaggerApplication(){
 
-    @Inject
-    lateinit var usersRepository: UsersRepository
+    lateinit var refWatcher : RefWatcher
+    private set
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         val appComponent = DaggerAppComponent.builder()
@@ -19,4 +19,10 @@ class BaseApplication: DaggerApplication(){
         return appComponent
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this))
+            return
+        refWatcher = LeakCanary.install(this)
+    }
 }

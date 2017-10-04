@@ -1,6 +1,7 @@
 package com.ikechukwuakalu.daggermvp.userdetails
 
 import android.os.Bundle
+import com.ikechukwuakalu.daggermvp.BaseApplication
 import com.ikechukwuakalu.daggermvp.R
 import com.ikechukwuakalu.daggermvp.base.BaseActivity
 import javax.inject.Inject
@@ -15,6 +16,7 @@ class UsersDetailsActivity: BaseActivity() {
         setContentView(R.layout.user_detail_act)
 
         addFragment(R.id.detailsRoot, view)
+        (application as BaseApplication).refWatcher.watch(this)
     }
 
     companion object {
