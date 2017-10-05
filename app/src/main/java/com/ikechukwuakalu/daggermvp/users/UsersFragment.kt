@@ -90,6 +90,7 @@ class UsersFragment @Inject constructor() : DaggerFragment(), UsersContract.View
         val alertDialog = AlertDialog.Builder(context)
         alertDialog.setTitle("Enter a new city")
         val cityBox = EditText(context)
+        cityBox.hint = "city"
         val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
