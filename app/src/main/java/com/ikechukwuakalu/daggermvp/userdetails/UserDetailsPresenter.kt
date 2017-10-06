@@ -2,6 +2,7 @@ package com.ikechukwuakalu.daggermvp.userdetails
 
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
+import com.ikechukwuakalu.daggermvp.utils.espresso.EspressoIdlingResource
 import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.BaseScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -27,9 +28,14 @@ class UserDetailsPresenter @Inject constructor(private var usersRepository: User
     override fun fetchUserDetails() {
         detailsView?.showLoading()
 
+        EspressoIdlingResource.increment()
         val disposable : Disposable = usersRepository.getUser(login)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.ui())
+                .doFinally {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow)
+                        EspressoIdlingResource.decrement()
+                }
                 .subscribe({
                     // onNext()
                     detailsView?.hideLoading()

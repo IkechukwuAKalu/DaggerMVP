@@ -3,6 +3,7 @@ package com.ikechukwuakalu.daggermvp.users
 import com.ikechukwuakalu.daggermvp.data.UsersRepository
 import com.ikechukwuakalu.daggermvp.data.models.User
 import com.ikechukwuakalu.daggermvp.di.scopes.ActivityScoped
+import com.ikechukwuakalu.daggermvp.utils.espresso.EspressoIdlingResource
 import com.ikechukwuakalu.daggermvp.utils.rx.schedulers.BaseScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -35,9 +36,14 @@ class UsersPresenter @Inject constructor (private var usersRepo: UsersRepository
             newUsers += listOf(sponsoredUser())
         }
 
+        EspressoIdlingResource.increment()
         val disposable : Disposable = usersRepo.getUsers(location)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.ui())
+                .doFinally {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow)
+                        EspressoIdlingResource.decrement()
+                }
                 .subscribe({
                     // onNext()
                     val users : List<User> = it.items.toList()

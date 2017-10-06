@@ -3,6 +3,7 @@ package com.ikechukwuakalu.daggermvp.users
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -15,12 +16,16 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class UsersScreenTest {
+
+    val userLogin = "IkechukwuAKalu"
 
     @Rule
     @JvmField
@@ -41,12 +46,24 @@ class UsersScreenTest {
         ).matches(item)
     }
 
+    @Before
+    fun setUp() {
+        IdlingRegistry.getInstance()
+                .register(activityRule.activity.getIdlingResource())
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance()
+                .unregister(activityRule.activity.getIdlingResource())
+    }
+
     /**
      * ToDo("Implement Mock data injection for consistent testing results")
      */
     @Test
     fun clickOnUser_OpenUserDetails() {
-        onView(withItemText("IkechukwuAKalu")).perform(click())
+        onView(withItemText(userLogin)).perform(click())
         onView(withId(R.id.openBrowserButton)).check(matches(isDisplayed()))
     }
 
